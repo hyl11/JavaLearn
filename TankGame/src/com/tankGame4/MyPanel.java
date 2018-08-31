@@ -20,15 +20,23 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 		//»­³ötank
 		drawTank(hero_Tank.getX(), hero_Tank.getY(), g, hero_Tank.getDirection(),0);
 		for(int i = 0; i < hero_Tank.bullet.size(); i ++) {
-			if(hero_Tank.bullet.get(i) != null && hero_Tank.bullet.get(i).isAlive) {
-				g.draw3DRect(hero_Tank.bullet.get(i).x, hero_Tank.bullet.get(i).y, 1, 1, false);
+			Bullet b = hero_Tank.bullet.get(i);
+			if(b != null && b.isAlive) {
+				g.draw3DRect(b.x, b.y, 1, 1, false);
 			}
+			else if(b.isAlive == false)
+				hero_Tank.bullet.remove(b);
 		}
-//		for(int i = 0; i < enemySize; i ++) {
-//			EnemyTank tmp = enemys.get(i);
-//			drawTank(tmp.getX(), tmp.getY(),
-//					  g, tmp.getDirection(), tmp.getColor());
-//		}
+		for(int i = 0; i < enemySize; i ++) {
+			EnemyTank tmp = enemys.get(i);
+			for(int j =0; j < hero_Tank.bullet.size(); j ++) {
+				Bullet b = hero_Tank.bullet.get(j);
+				if(b.isAlive)
+				    hitTank(b, tmp);
+			}
+			if(tmp.isAlive)
+			    drawTank(tmp.getX(), tmp.getY(),g, tmp.getDirection(), tmp.getColor());
+		}
 	}
 	public void drawTank(int x,int y,Graphics g,int direc,int color) {
 		switch(color) {
@@ -71,12 +79,32 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 			break;
 		}
 	}
+	
+	public void hitTank(Bullet b, EnemyTank et) {
+		switch(et.getDirection()) {
+		case Tank.UP:
+		case Tank.DOWN:
+			if(b.x > et.getX() && b.x < et.getX()+20 && b.y > et.getY() && b.y < et.getY()+30) {
+				b.isAlive = false;
+				et.isAlive = false;
+			}
+			break;
+		case Tank.LEFT:
+		case Tank.RIGHT:
+            if(b.x > et.getX() && b.x < et.getX()+30 && b.y > et.getY()+5 && b.y < et.getY()+25) {
+				b.isAlive = false;
+				et.isAlive = false;
+			}
+			break;
+		}
+	}
+	
 	public MyPanel() {
 		/*enemy tank*/
 		hero_Tank = new HeroTank(100, 100);
 		for(int i = 0; i < enemySize; i ++) {
 			EnemyTank em = new EnemyTank(10+35*i, 10+35*i);
-			em.setColor(0);
+			em.setColor(1);
 		    enemys.add(em);
 		}
 	}
@@ -102,7 +130,8 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 		}
 		//·¢Éä×Óµ¯
 		if(arg0.getKeyCode() == KeyEvent.VK_J) {
-			this.hero_Tank.shotEnemy();
+			if(hero_Tank.bullet.size() < 5)
+			    this.hero_Tank.shotEnemy();
 		} 
 		repaint();
 	}
@@ -140,6 +169,7 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
+			
 			this.repaint();
 		}
 	}

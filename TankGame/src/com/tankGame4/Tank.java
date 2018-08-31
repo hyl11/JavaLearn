@@ -11,6 +11,7 @@ class Tank{
 	/*tank speed*/
 	int speed = 3;
 	int color;
+	public boolean isAlive = true;
 	
 	Vector<Bullet> bullet = new Vector<>();
 	
