@@ -52,5 +52,34 @@ class Tank{
     public void setDirection(int direction) {
 	    this.direction = direction;
     }
+    public void shotEnemy() {
+		Bullet bu = null;
+		switch (this.direction) {
+		case UP:{
+			bu = new Bullet(x + 10, y,UP);
+			bullet.add(bu);
+			break;
+		}
+		case DOWN:{
+			bu = new Bullet(x+10, y+30,DOWN);
+			bullet.add(bu);
+			break;
+		}
+		case LEFT:{
+			bu = new Bullet(x, y+14,LEFT);
+			bullet.add(bu);
+			break;
+		}
+		case RIGHT:{
+			bu = new Bullet(x+30, y+14,RIGHT);
+			bullet.add(bu);
+			break;
+		}
+		default:
+			break;
+		}
+		Thread t = new Thread(bu);
+		t.start();
+	}
 }
 

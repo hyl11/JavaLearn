@@ -12,7 +12,7 @@ public class Bullet implements Runnable{
 		this.x = x;
 		this.y = y;
 		this.direction = direction;
-		this.speed = 1;
+		this.speed = 2;
 		this.isAlive = true;
 	}
 	public void run() {
