@@ -32,28 +32,28 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 		}
 		for(int i = 0; i < enemySize; i ++) {
 			EnemyTank tmp = enemys.get(i);
-			for(int j =0; j < hero_Tank.bullet.size(); j ++) {
-				Bullet b = hero_Tank.bullet.get(j);
-				if(b.isAlive)
-				    hitTank(b, tmp);
-			}
 			if(tmp.isAlive)
 			    drawTank(tmp.getX(), tmp.getY(),g, tmp.getDirection(), tmp.getColor());
 		}
-		
+		//System.out.println("size = " + bombs.size());
 		for(int i = 0; i < bombs.size(); i ++) {
+			//System.out.println("get a bomb and its life is ");
 			Bomb b = bombs.get(i);
+			//System.out.println(b.livetime + "isalive" + b.isAlive);
 			if(b.isAlive) {
 				if(b.livetime > 6) {
-					g.drawImage(i1, b.x, b.y, 30, 30,this);
+					System.out.println("draw gif1");
+					g.drawImage(i1, b.x, b.y, 20, 20,this);
 					b.bombing();
 				}
 				else if(b.livetime > 3) {
-					g.drawImage(i2, b.x, b.y, 30, 30,this);
+					System.out.println("draw gif2");
+					g.drawImage(i2, b.x, b.y, 20, 20,this);
 				    b.bombing();
 				}
 				else {
-					g.drawImage(i3, b.x, b.y, 30, 30,this);
+					System.out.println("draw gif3");
+					g.drawImage(i3, b.x, b.y, 20, 20,this);
 					b.bombing();
 				}
 			}
@@ -135,9 +135,9 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 		    enemys.add(em);
 		}
 		Toolkit kit = Toolkit.getDefaultToolkit();
-		i1 = kit.getImage("picture/picture1.png");
-		i2 = kit.getImage("picture/picture2.png");
-		i3 = kit.getImage("picture/picture3.png");
+		i1 = kit.getImage("picture/bomb_1.gif");
+		i2 = kit.getImage("picture/bomb_2.gif");
+		i3 = kit.getImage("picture/bomb_3.gif");
 		
 	}
 	
@@ -201,7 +201,14 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-			
+			for(int i = 0; i < enemySize; i ++) {
+				EnemyTank tmp = enemys.get(i);
+				for(int j =0; j < hero_Tank.bullet.size(); j ++) {
+					Bullet b = hero_Tank.bullet.get(j);
+					if(b.isAlive)
+					    hitTank(b, tmp);
+				}
+			}
 			this.repaint();
 		}
 	}
