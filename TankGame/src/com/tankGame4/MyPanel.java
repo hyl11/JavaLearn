@@ -7,13 +7,16 @@ import java.awt.event.KeyListener;
 import java.util.Vector;
 
 import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 class MyPanel extends JPanel implements KeyListener,Runnable{
 	
 	HeroTank hero_Tank  = null;
 	Vector<EnemyTank> enemys = new Vector<>();
+	Vector<Bomb> bombs = new Vector<>();
 	int enemySize = 3;
-	
+	Image i1,i2,i3;
 	public void paint(Graphics g) {
 		super.paint(g);
 		g.fillRect(0, 0,400, 300);
@@ -37,6 +40,28 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 			if(tmp.isAlive)
 			    drawTank(tmp.getX(), tmp.getY(),g, tmp.getDirection(), tmp.getColor());
 		}
+		
+		for(int i = 0; i < bombs.size(); i ++) {
+			Bomb b = bombs.get(i);
+			if(b.isAlive) {
+				if(b.livetime > 6) {
+					g.drawImage(i1, b.x, b.y, 30, 30,this);
+					b.bombing();
+				}
+				else if(b.livetime > 3) {
+					g.drawImage(i2, b.x, b.y, 30, 30,this);
+				    b.bombing();
+				}
+				else {
+					g.drawImage(i3, b.x, b.y, 30, 30,this);
+					b.bombing();
+				}
+			}
+			else {
+				bombs.remove(b);
+			}
+		}
+		
 	}
 	public void drawTank(int x,int y,Graphics g,int direc,int color) {
 		switch(color) {
@@ -87,6 +112,7 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 			if(b.x > et.getX() && b.x < et.getX()+20 && b.y > et.getY() && b.y < et.getY()+30) {
 				b.isAlive = false;
 				et.isAlive = false;
+				bombs.add(new Bomb(et.getX(), et.getY()));
 			}
 			break;
 		case Tank.LEFT:
@@ -94,6 +120,7 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
             if(b.x > et.getX() && b.x < et.getX()+30 && b.y > et.getY()+5 && b.y < et.getY()+25) {
 				b.isAlive = false;
 				et.isAlive = false;
+				bombs.add(new Bomb(et.getX(), et.getY()));
 			}
 			break;
 		}
@@ -107,6 +134,11 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 			em.setColor(1);
 		    enemys.add(em);
 		}
+		Toolkit kit = Toolkit.getDefaultToolkit();
+		i1 = kit.getImage("picture/picture1.png");
+		i2 = kit.getImage("picture/picture2.png");
+		i3 = kit.getImage("picture/picture3.png");
+		
 	}
 	
 	@Override/*wasd表示上下左右移动  */
