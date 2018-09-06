@@ -14,9 +14,8 @@ import java.awt.*;
 class MyPanel extends JPanel implements KeyListener,Runnable{
 	
 	HeroTank hero_Tank  = null;
-	Vector<EnemyTank> enemys = new Vector<>();
 	Vector<Bomb> bombs = new Vector<>();
-	int enemySize = 3;
+	EnemyGroup enemyGroup = null;
 	Image i1,i2,i3;
 	public void paint(Graphics g) {
 		super.paint(g);
@@ -33,8 +32,8 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 				hero_Tank.bullet.remove(b);
 		}
 		//画出enemy_tank
-		for(int i = 0; i < enemySize; i ++) {
-			EnemyTank tmp = enemys.get(i);
+		for(int i = 0; i < enemyGroup.enemySize; i ++) {
+			EnemyTank tmp = EnemyGroup.enemyTanks.get(i);
 			if(tmp.isAlive)
 			    drawTank(tmp.getX(), tmp.getY(),g, tmp.getDirection(), tmp.getColor());
 		    for(int j = 0;j < tmp.bullet.size(); j ++) {
@@ -47,11 +46,9 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 		    	}
 		    }
 		}
-		//System.out.println("size = " + bombs.size());
+		
 		for(int i = 0; i < bombs.size(); i ++) {
-			//System.out.println("get a bomb and its life is ");
 			Bomb b = bombs.get(i);
-			//System.out.println(b.livetime + "isalive" + b.isAlive);
 			if(b.isAlive) {
 				if(b.livetime > 6) {
 				//	System.out.println("draw gif1");
@@ -59,12 +56,10 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 					b.bombing();
 				}
 				else if(b.livetime > 3) {
-				//	System.out.println("draw gif2");
 					g.drawImage(i2, b.x, b.y, 20, 20,this);
 				    b.bombing();
 				}
 				else {
-				//	System.out.println("draw gif3");
 					g.drawImage(i3, b.x, b.y, 20, 20,this);
 					b.bombing();
 				}
@@ -141,15 +136,7 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 	public MyPanel() {
 		/*enemy tank*/
 		hero_Tank = new HeroTank(100, 100);
-		for(int i = 0; i < enemySize; i ++) {
-			EnemyTank em = new EnemyTank(10+35*i, 10);
-			em.setColor(1);
-		    enemys.add(em);
-		    Thread t = new Thread(em);
-		    t.start();
-		    //给敌人坦克添加子弹
-		   em.shotEnemy();
-		}
+		enemyGroup = new EnemyGroup(3);
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		i1 = kit.getImage("picture/bomb_1.gif");
 		i2 = kit.getImage("picture/bomb_2.gif");
@@ -218,8 +205,8 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 				// TODO: handle exception
 			}
 			//判断我的子弹是否击中敌人坦克
-			for(int i = 0; i < enemySize; i ++) {
-				EnemyTank tmp = enemys.get(i);
+			for(int i = 0; i < enemyGroup.enemySize; i ++) {
+				EnemyTank tmp = EnemyGroup.enemyTanks.get(i);
 				for(int j =0; j < hero_Tank.bullet.size(); j ++) {
 					Bullet b = hero_Tank.bullet.get(j);
 					if(b.isAlive)
@@ -227,8 +214,8 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 				}
 			}
 			//判断敌人坦克是否击中我的tank
-			for(int i = 0; i < enemySize; i ++) {
-				for(Bullet b : enemys.get(i).bullet) {
+			for(int i = 0; i < enemyGroup.enemySize; i ++) {
+				for(Bullet b : EnemyGroup.enemyTanks.get(i).bullet) {
 					if(b.isAlive)
 						hitTank(b, hero_Tank);
 				}

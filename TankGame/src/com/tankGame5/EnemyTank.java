@@ -30,19 +30,19 @@ public class EnemyTank extends Tank implements Runnable{
 				}
 				switch (this.getDirection()) {
 					case Tank.UP:
-						if(y > 0)
+						if(y > 0 && !EnemyGroup.is2TankTouched(this))
 						    y -= speed;
 						break;
 					case Tank.DOWN:
-						if(y <300)
+						if(y <300 && !EnemyGroup.is2TankTouched(this))
 						    y += speed;
 						break;
 					case Tank.LEFT:
-						if(x > 0)
+						if(x > 0 && !EnemyGroup.is2TankTouched(this))
 						    x -= speed;
 						break;
 					case Tank.RIGHT:
-						if(x < 400)
+						if(x < 400 && !EnemyGroup.is2TankTouched(this))
 						    x += speed;
 						break;
 					}
