@@ -87,9 +87,7 @@ public class ShowView extends JFrame implements ActionListener {
 		if(e.getSource().equals(Query)) {
 			String name = InputField.getText();
 			StuModel Stum = new StuModel("select * from Student where StuName='" + name + "'");
-			Table = new JTable(Stum);
-			this.add(Table);
-			this.setVisible(true);
+			Table.setModel(Stum);
 		}
 	}
 
